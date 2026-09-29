@@ -423,7 +423,18 @@ jobs:
           sudo timedatectl set-timezone "${TZ}"
           echo "build_tag=Armbian${set_release}_arm64_${{ inputs.armbian_edition }}_$(date +"%Y.%m")" >> ${GITHUB_ENV}
           echo "status=success" >> ${GITHUB_OUTPUT}
+      - name: Compile modified Amlogic boot scripts
+        run: |
+          sudo apt-get -y install u-boot-tools
 
+          cd "${{ github.workspace }}/build-armbian/armbian-files/platform-files/amlogic/bootfs"
+
+          mkimage -C none -A arm -T script -d aml_autoscript.cmd aml_autoscript
+          mkimage -C none -A arm -T script -d boot.cmd boot.scr
+
+          echo "Modified boot scripts:"
+          ls -lh aml_autoscript boot.scr
+          
       - name: Rebuild Armbian for target boards
         uses: ./
         if: ${{ env.ARMBIAN_URL != '' && !cancelled() }}

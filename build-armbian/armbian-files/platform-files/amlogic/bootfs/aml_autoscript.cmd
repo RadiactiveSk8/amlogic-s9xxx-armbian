@@ -1,4 +1,4 @@
-if printenv bootfromsd; then exit; else setenv ab 0; fi;
+setenv ab 0;
 setenv bootcmd 'run start_autoscript; run storeboot'
 setenv start_autoscript 'if mmcinfo; then run start_mmc_autoscript; fi; if usb start; then run start_usb_autoscript; fi; run start_emmc_autoscript'
 setenv start_emmc_autoscript 'if fatload mmc 1 1020000 emmc_autoscript; then autoscr 1020000; fi;'
